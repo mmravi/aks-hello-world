@@ -7,7 +7,7 @@ pipeline {
                         sh 'cp -R helm/* .'
 		        sh 'ls -ltr'
                         sh 'pwd'
-                        sh '/usr/local/bin/helm upgrade --helloworld hello-world'
+                        sh '/usr/local/bin/helm upgrade --install helloworld hello-world'
               			
             }           
         }
