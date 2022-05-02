@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: vproapp
-        image: mmravi99/helloworld:latest
+        image: mmravi99/helloworld02:latest
         ports:
         - name: vproapp-port
           containerPort: 8080
