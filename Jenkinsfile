@@ -1,15 +1,33 @@
 pipeline {
-	agent any
-    stages {
-        stage('Build on AKS ') {
-            steps {           
-                        sh 'pwd'
-                        sh 'cp -R helm/* .'
-		        sh 'ls -ltr'
-                        sh 'pwd'
-                        sh '/usr/local/bin/helm upgrade --install helloworld hello-world'
-              			
-            }           
+  agent any
+    tools {
+      maven 'maven3'
+                 jdk 'JDK8'
+    }
+    stages {      
+        stage('Build maven ') {
+            steps { 
+                    sh 'pwd'      
+                    sh 'mvn  clean install package'
+            }
         }
+        
+        stage('Copy Artifact') {
+           steps { 
+                   sh 'pwd'
+		   sh 'cp -r webapp/target/*.war .'
+           }
+        }
+         
+        stage('Build docker image') {
+           steps {
+               script {         
+                 def customImage = docker.build('mmravi99/helloworld02', ".")
+                 docker.withRegistry('https://registry.hub.docker.com', 'mmr-docker') {
+                 customImage.push("${env.BUILD_NUMBER}")
+                 }                     
+           }
+        }
+	  }
     }
 }
